@@ -1,0 +1,343 @@
+﻿@{
+    ViewBag.Title = "Trang chủ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="page-content">
+
+    <div class="header-model">
+        <div class="header-content">
+            <h1 style="font-family: 'Bahnschrift SemiBold', fantasy; font-size: 3.5em; text-shadow: 3px 3px 7px rgba(0,0,0,0.9);">ĐANG TẢI TRAILER...</h1>
+            <button id="trailer-button" title="Xem Trailer" style="display:none; margin-top: 20px; padding: 12px 25px; font-size: 1.2em; background-color: #e50914; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s, transform 0.2s;">
+                <i class="fa fa-play" style="margin-right: 8px;">XEM TRAILER</i>
+            </button>
+        </div>
+        <div class="slider-controls">
+            <button id="prev-btn" style="background: rgba(0,0,0,0.5); border: none; color: white; font-size: 2em; padding: 15px; cursor: pointer; border-radius: 50%; transition: background-color 0.3s; display: flex; align-items: center; justify-content: center;"><i class="fa fa-chevron-left"></i></button>
+            <button id="next-btn" style="background: rgba(0,0,0,0.5); border: none; color: white; font-size: 2em; padding: 15px; cursor: pointer; border-radius: 50%; transition: background-color 0.3s; display: flex; align-items: center; justify-content: center;"><i class="fa fa-chevron-right"></i></button>
+        </div>
+    </div>
+
+    <div id="video-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" style="position: absolute; top: -40px; right: 0; color: #fff; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 10000; opacity: 1; transition: color 0.2s;">&times;</span>
+            <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;">
+                <iframe id="trailer-player"
+                        src=""
+                        frameborder="0"
+                        allow="autoplay; encrypted-media"
+                        allowfullscreen
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                </iframe>
+            </div>
+        </div>
+    </div>
+
+    <section class="movie-list-section">
+        <h2>     PHIM ĐANG CHIẾU</h2>
+        <div id="dynamic-movie-container" class="owl-carousel owl-theme">
+            <p style="text-align:center; color: #555;">Đang tải danh sách phim...</p>
+        </div>
+    </section>
+</div>
+
+<style>
+    /* ------------------- CSS BANNER SLIDER ------------------- */
+    .header-model {
+        width: 100%;
+        height: 550px;
+        position: relative;
+        overflow: hidden;
+        background-color: #1a1a1a; /* Màu nền tối nếu ảnh chưa tải được */
+        background-size: cover;
+        background-position: center;
+        margin-top: -60px; /* Bù đắp cho fixed header */
+        display: flex; /* Để căn giữa nội dung bên trong */
+        align-items: center; /* Căn dọc */
+        justify-content: center; /* Căn ngang */
+        text-align: center;
+        color: white;
+        transition: background-image 0.5s ease-in-out; /* Hiệu ứng chuyển ảnh mượt mà */
+    }
+
+        /* Overlay */
+        .header-model:after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            background: rgba(0,0,0,.5); /* Lớp phủ tối hơn để chữ nổi bật */
+            box-shadow: inset 0 0 80px rgba(0,0,0,0.9); /* Bóng tối sâu hơn */
+        }
+
+    .header-content {
+        z-index: 3;
+        position: relative;
+        max-width: 80%;
+    }
+    /* relative để nằm trên overlay */
+    .trailer-button:hover {
+        background-color: #c40812;
+        transform: scale(1.05);
+    }
+
+    .slider-controls {
+        z-index: 3;
+        position: absolute;
+        top: 50%;
+        width: 100%; /* ⬅️ Quan trọng: Chiếm toàn bộ chiều rộng container */
+        /* Bổ sung các thuộc tính mở rộng */
+        left: 0; /* ⬅️ Đặt sát mép trái */
+        right: 0; /* ⬅️ Đặt sát mép phải */
+
+        display: flex;
+        justify-content: space-between;
+        
+        transform: translateY(-50%);
+    }
+
+        .slider-controls button:hover {
+            background-color: rgba(0,0,0,0.8);
+        }
+
+
+    /* ------------------- CSS MODAL ------------------- */
+    .modal {
+        /* FIX CHÍNH: Đảm bảo Modal mặc định là ẩn và sử dụng class để hiện */
+        /* ⬅️ Bỏ !important và chỉ để display: none */
+        position: fixed;
+        z-index: 99999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.95);
+        /* Bỏ display: flex; ở đây */
+    }
+
+
+    #video-modal {
+        /* Đảm bảo trạng thái mặc định là ẩn */
+        display: flex;
+        z-index: 9999;  
+    }
+
+    .modal-content {
+        z-index: 100000;
+        margin: auto;
+        padding: 0;
+        width: 90%;
+        max-width: 1000px;
+        position: relative; /* Cho phép nút đóng nằm ngoài */
+    }
+
+    .close-button:hover {
+        z-index: 100001;
+        top: -50px;
+        right: 0;
+        color: #fff;
+        font-size: 40px;
+        position: absolute;
+        cursor: pointer;
+    }
+    /* ------------------- CSS DANH SÁCH PHIM ------------------- */
+    .movie-list-section {
+        width: 100%;
+        max-width: 1200px;
+        margin: 50px auto 30px auto;
+        padding: 0 40px;
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+
+        .movie-list-section h2 {
+            color: #1a1a1a;
+            font-size: 2.2em;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-bottom: 4px solid #e50914;
+            padding-bottom: 8px;
+            display: inline-block;
+            letter-spacing: 1px;
+            margin-left: 0;
+            margin-bottom: 30px;
+        }
+
+    .movie-card a {
+        height: 380px;
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 10px;
+        background: #fdfdfd;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        transition: transform 0.3s, box-shadow 0.3s;
+        text-decoration: none;
+    }
+
+        .movie-card a:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+
+    .movie-card img {
+        width: 100%;
+        height: 85%;
+        object-fit: cover;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+    }
+
+    .movie-card h4 {
+        font-size: 1.1em;
+        font-weight: 600;
+        margin: auto 0 0 0;
+        color: #333;
+        text-align: center;
+        padding: 10px 10px 5px 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis; /* Ngăn tràn chữ */
+    }
+    /* Responsive cho Banner và Danh sách phim */
+    @@media (max-width: 768px) {
+        .header-model {
+            width: 100%;
+            height: 550px;
+            position: relative;
+            overflow: hidden;
+            background-color: black;
+            /* ⬅️ THÊM DÒNG NÀY: Đảm bảo ảnh luôn phủ đầy và không bị méo */
+            background-size: cover;
+            background-position: center top; /* ⬅️ Tập trung vào phần trên của ảnh */
+            margin-top: -60px;
+        }
+
+        .header-content h1 {
+            font-size: 2.5em;
+        }
+
+        .slider-controls {
+            padding: 0 20px;
+        }
+
+            .slider-controls button {
+                font-size: 1.5em;
+                padding: 10px;
+            }
+
+        .movie-list-section {
+            padding: 20px;
+            margin: 30px auto;
+        }
+
+            .movie-list-section h2 {
+                font-size: 1.8em;
+            }
+    }
+</style>
+
+
+<script>
+    //1. DỮ LIỆU ĐỘNG CHO HEADER SLIDER
+    let currentMovieIndex = 0;
+    let movieData = [];
+    window.currentVideoId = "";
+
+    function loadHeaderSliderData() {
+        $.ajax({
+            url: '@Url.Action("LayTrailerHeader", "DSP")', type: 'GET', dataType: 'text',
+            success: function (data) {
+                try {
+                    const movies = JSON.parse(data);
+                    if (movies && movies.length > 0) {
+                        movieData = movies;
+                        updateHeader(0);
+                        $('#trailer-button').show();
+                    } else {
+                        $('.header-content h1').text("Hiện chưa có trailer nào được thêm.");
+                        $('.header-model').css('background-image', `url('/img/anhnendangnhap2.jpg')`);
+                        $('#trailer-button').hide();
+                    }
+                } catch (e) { console.error("Lỗi khi parse JSON Trailer:", e); }
+            }
+        });
+    }
+
+    // Hàm cập nhật ID phim , tiêu đề của phim và cập nhật ảnh nền
+
+    function updateHeader(index) {
+        if (movieData.length === 0) return;
+        const movie = movieData[index];
+        window.currentVideoId = movie.id;
+        $('.header-content h1').text(movie.title.toUpperCase());
+        const safeBackground = movie.background;
+        $('.header-model').css('background-image', `url('/img/${safeBackground}')`);
+
+        currentMovieIndex = index;
+    }
+
+    //  2. HÀM TẢI DANH SÁCH PHIM ĐỘNG
+    function loadDynamicMovies() {
+        $.ajax({
+            url: '@Url.Action("LayDSP", "DSP")', type: 'GET', dataType: 'text',
+            success: function (data) {
+                const container = $('#dynamic-movie-container');
+                if (container.hasClass('owl-carousel')) { container.owlCarousel('destroy'); }
+                container.empty();
+                if (data === "DSP rỗng") { container.html('<p style="text-align:center;">Chưa có phim nào được thêm.</p>'); return; }
+
+                try {
+                    const movies = JSON.parse(data);
+                    movies.forEach(function (phim) {
+                        const imageUrl = `/img/${phim.TenPhim}.jpg`;
+
+                        const movieHtml = `
+                            <div class="movie-card item">
+                                <a href="#">
+                                    <img src="${imageUrl}" alt="${phim.TenPhim} Poster" onerror="this.onerror=null; this.src='/img/placeholder.png';" />
+                                    <h4>${phim.TenPhim}</h4>
+                                </a>
+                            </div>
+                        `;
+                        container.append(movieHtml);
+                    });
+                    container.owlCarousel({ loop: true, margin: 20, nav: false, dots: true, autoplay: true, autoplayTimeout: 5000,
+                        responsive: { 0: { items: 2, margin: 10 }, 600: { items: 3 }, 1000: { items: 5 } }
+                    });
+
+                } catch (e) { console.error("Lỗi khi parse JSON hoặc xử lý dữ liệu phim:", e); container.html('<p style="text-align:center; color:red;">Lỗi tải dữ liệu phim.</p>'); }
+            }
+        });
+    }
+    // Mở modal và nút bật tắt modal
+    $(function () {
+
+        $('#video-modal').css('display', 'none');
+
+        loadHeaderSliderData();
+        loadDynamicMovies();
+  const modal = $('#video-modal');
+  const btn = $('#trailer-button');
+  const closeBtn = $('.close-button');
+  const iframe = $('#trailer-player');
+        function closeModal() { modal.css('display', 'none'); iframe.attr('src', ''); }
+        btn.on('click', function () {
+            const videoUrl = 'https://www.youtube.com/embed/' + window.currentVideoId + '?autoplay=1&rel=0&showinfo=0&iv_load_policy=3';
+            iframe.attr('src', videoUrl);
+            $('.modal').css('display', '');
+
+        });
+       closeBtn.on('click', closeModal);
+        $(window).on('click', function (event) { if ($(event.target).is(modal)) { closeModal(); } });
+
+        $('#next-btn').on('click', function () { if (movieData.length > 0) { currentMovieIndex = (currentMovieIndex + 1) % movieData.length; updateHeader(currentMovieIndex); } });
+        $('#prev-btn').on('click', function () { if (movieData.length > 0) { currentMovieIndex = (currentMovieIndex - 1 + movieData.length) % movieData.length; updateHeader(currentMovieIndex); } });
+    });
+</script>
