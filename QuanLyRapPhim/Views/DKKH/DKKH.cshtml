@@ -1,0 +1,147 @@
+﻿
+@{
+    Layout = null;
+    ViewBag.Title = "DangKyTaiKhoan";
+}
+
+<style>
+    body {
+        background-color: #ffffff;
+        font-family: Arial, sans-serif;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .register-box {
+        background: white;
+        padding: 30px 40px;
+        border-radius: 15px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        width: 350px;
+        text-align: center;
+    }
+
+        .register-box h2 {
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+    input[type="email"],
+    input[type="password"],
+    input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+
+    .toggle-text {
+        margin-top: -5px;
+        margin-bottom: 10px;
+        font-size: 13px;
+        color: #007bff;
+        cursor: pointer;
+        text-align: right;
+        display: block;
+    }
+
+        .toggle-text:hover {
+            text-decoration: underline;
+        }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        cursor: pointer;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+
+        button[type="submit"] {
+            background-color: #007bff;
+        }
+
+            button[type="submit"]:hover {
+                background-color: #0056b3;
+            }
+
+    .switch-btn {
+        background-color: #28a745;
+    }
+
+        .switch-btn:hover {
+            background-color: #1e7e34;
+        }
+
+    .message {
+        margin-top: 15px;
+        color: red;
+    }
+</style>
+
+<div class="register-box">
+    <h2>Đăng ký tài khoản</h2>
+
+    <form method="post" onsubmit="return validatePassword()">
+        <input type="text" name="tentk" placeholder="Nhập tên tài khoản" required />
+
+        <input type="password" id="matkhau" name="matkhau" placeholder="Nhập mật khẩu" required />
+        <input type="password" id="nhapLaiMatKhau" placeholder="Nhập lại mật khẩu" required />
+        <span class="toggle-text" onclick="togglePassword()">Hiện mật khẩu</span>
+
+        <button type="submit">Đăng ký</button>
+    </form>
+
+    <div class="message" id="errorMessage"></div>
+
+    @if (ViewBag.ThongBao != null)
+    {
+        <div class="message">@ViewBag.ThongBao</div>
+    }
+
+    <button class="switch-btn" onclick="location.href='@Url.Action("DNKH", "DNKH")'">
+        Đã có tài khoản? Đăng nhập
+    </button>
+</div>
+
+<script>
+    // Ẩn/hiện mật khẩu cho cả hai ô
+    function togglePassword() {
+        const pw1 = document.getElementById("matkhau");
+        const pw2 = document.getElementById("nhapLaiMatKhau");
+        const toggleText = document.querySelector(".toggle-text");
+
+        if (pw1.type === "password") {
+            pw1.type = "text";
+            pw2.type = "text";
+toggleText.textContent = "Ẩn mật khẩu";
+        } else {
+            pw1.type = "password";
+            pw2.type = "password";
+            toggleText.textContent = "Hiện mật khẩu";
+        }
+    }
+
+    // Kiểm tra mật khẩu nhập lại có trùng không
+    function validatePassword() {
+        const pw1 = document.getElementById("matkhau").value;
+        const pw2 = document.getElementById("nhapLaiMatKhau").value;
+        const errorMsg = document.getElementById("errorMessage");
+
+        if (pw1 !== pw2) {
+            errorMsg.textContent = "Mật khẩu nhập lại không trùng khớp!";
+            return false;
+        }
+
+        errorMsg.textContent = "";
+        return true;
+    }
+</script>
