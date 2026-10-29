@@ -1,0 +1,131 @@
+﻿
+@{
+    ViewBag.Title = "DangNhap";
+    Layout = null;
+
+}
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
+<link rel="stylesheet" href="~/Content/style.css" />
+<img src="~/img/pexels-tima-miroshnichenko-7991375.jpg"
+     style="opacity: 0.9;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            z-index: -1;" />
+
+<div id="wrapper">
+    <form id="form-login" method="post">
+        <h1 class="form-heading">Đăng nhập</h1>
+        @if (ViewBag.Error != null)
+        {
+            <div style="color: yellow; text-align: center; margin-bottom: 10px; font-style: italic;">
+                <i class="fas fa-exclamation-triangle"></i> @ViewBag.Error
+            </div>
+        }
+
+        <div class="form-group">
+            <i class="far fa-user"></i>
+            <input name="username" type="text" class="form-input" placeholder="Tên đăng nhập" />
+        </div>
+        <div class="form-group">
+            <i class="fas fa-key"></i>
+            <input name="password" type="password" class="form-input" placeholder="Mật khẩu" />
+            <div id="eye">
+                <i class="far fa-eye"></i>
+            </div>
+        </div>
+        <input type="submit" value="Đăng nhập" class="form-submit" />
+    </form>
+</div>
+
+<style>
+    #wrapper {
+        width: 100%;
+        height: 100%;
+        display: flex;
+    }
+
+    #form-login {
+        max-width: 450px;
+        max-height: 400px;
+        background: rgba(0,0,0,0.8);
+        flex-grow: 1;
+        padding: 10px 30px 40px;
+        box-shadow: 0px 0px 17px 2px rgba(255,255,255,0.8);
+        margin: auto;
+    }
+
+    .form-heading {
+        color: white;
+        text-align: center;
+    }
+
+    .form-group i {
+        color: white;
+        font-size: 14px;
+        padding-top: 5px;
+    }
+
+    .form-group {
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .form-input {
+        background: transparent;
+        outline: 0;
+        flex-grow: 1;
+        margin-left: 10px;
+        height: 35px;
+        color: white;
+    }
+
+        .form-input::placeholder {
+            color: rgb(112, 112, 112);
+        }
+
+        .form-input:focus {
+            box-shadow: 0 0 2px 2px white;
+        }
+
+    #eye i {
+        width: 20px;
+        margin-left: 10px;
+        text-align: center;
+    }
+
+    .form-submit {
+        background: transparent;
+        color: white;
+        width: 100%;
+        margin-top: 40px;
+        text-transform: uppercase;
+        padding: 6px 10px;
+    }
+
+        .form-submit:hover {
+            cursor: pointer;
+            background-color: white;
+            color: black;
+        }
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="js/app.js"></script>
+<script>
+        $(document).ready(function () {
+            $('#eye').click(function () {
+                $(this).toggleClass('open');
+                $(this).children('i').toggleClass('fa-eye-slash fa-eye');
+                if ($(this).hasClass('open')) {
+                    $(this).prev().attr('type', 'text');
+                } else {
+                    $(this).prev().attr('type', 'password');
+                }
+            });
+        });
+</script>
