@@ -125,6 +125,8 @@
     <Compile Include="Controllers\DKKHController.cs" />
     <Compile Include="Controllers\DNKHController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\DSPController.cs" />
+    <Compile Include="Controllers\TrangChuKhachHangController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -158,6 +160,17 @@
     <Content Include="img\anhnenlayout.jpg" />
     <Content Include="img\Logo.jpg" />
     <Content Include="img\pexels-tima-miroshnichenko-7991375.jpg" />
+    <Content Include="img\anhnendangnhap2.jpg" />
+    <Content Include="img\Avatar Fire And Ash.jpg" />
+    <Content Include="img\Avengers Endgame.jpg" />
+    <Content Include="img\Dune Part Two.jpg" />
+    <Content Include="img\Dune2_bg.jpg" />
+    <Content Include="img\Inside Out 2 .jpg" />
+    <Content Include="img\insideout2_bg .jpg" />
+    <Content Include="img\The Batman 2.jpg" />
+    <Content Include="img\thebatman_bg.jpg" />
+    <Content Include="img\Zootopia 2.jpg" />
+    <Content Include="img\Ảnh Trống.png" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -200,6 +213,7 @@
     <Content Include="Views\DangNhapNhanVien\DangNhapNhanVien.cshtml" />
     <Content Include="Views\DKKH\DKKH.cshtml" />
     <Content Include="Views\DNKH\DNKH.cshtml" />
+    <Content Include="Views\TrangChuKhachHang\TrangChuKhachHang.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
