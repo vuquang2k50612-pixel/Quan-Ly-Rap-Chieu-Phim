@@ -1,0 +1,138 @@
+﻿@{
+    ViewBag.Title = "Chỉnh sửa nhân viên";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+
+<div class="container mt-4">
+    <h3 class="fw-bold text-primary mb-3">Chỉnh sửa nhân viên</h3>
+    <hr />
+
+    <div class="bg-white p-4 rounded-3">
+        <form id="form-act">
+            <div class="mb-3">
+                <label for="txt_MNV" class="form-label fw-semibold">Mã nhân viên</label>
+                <input type="text" class="form-control" id="txt_MNV" name="txt_MNV" readonly disabled />
+            </div>
+            <div class="mb-3">
+                <label for="txt_HoTen" class="form-label fw-semibold">Họ và tên</label>
+                <input type="text" class="form-control" id="txt_HoTen" name="txt_HoTen" />
+            </div>
+            <div class="mb-3">
+                <label for="txt_MatKhau" class="form-label fw-semibold">Mật khẩu tài khoản</label>
+                <input type="text" class="form-control" id="txt_MatKhau" name="txt_MatKhau" />
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="txt_NgaySinh" class="form-label fw-semibold">Ngày sinh</label>
+                    <input type="date" class="form-control" id="txt_NgaySinh" name="txt_NgaySinh" />
+                </div>
+                <div class="col-md-6">
+                    <label for="txt_ThoiGianTuyen" class="form-label fw-semibold">Thời gian tuyển</label>
+                    <input type="date" class="form-control" id="txt_ThoiGianTuyen" name="txt_ThoiGianTuyen" />
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="txt_Email" class="form-label fw-semibold">Email</label>
+                <input type="email" class="form-control" id="txt_Email" name="txt_Email" />
+            </div>
+            <div class="mb-3">
+                <label for="txt_SDT" class="form-label fw-semibold">Số điện thoại</label>
+                <input type="text" class="form-control" id="txt_SDT" name="txt_SDT" />
+            </div>
+            <div class="mb-3">
+                <label for="txt_VaiTro" class="form-label fw-semibold">Vai trò</label>
+                <select id="txt_VaiTro" name="txt_VaiTro" class="form-select">
+                    <option value="" selected disabled>-- Chọn vai trò --</option>
+                    <option value="Quản lý">Quản lý</option>
+                    <option value="Nhân viên">Nhân viên</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="txt_Luong" class="form-label fw-semibold">Lương</label>
+                <input type="text" class="form-control" id="txt_Luong" name="txt_Luong" />
+            </div>
+            <div class="mb-4">
+                <label for="slc_GioiTinh" class="form-label fw-semibold">Giới tính</label>
+                <select id="slc_GioiTinh" name="slc_GioiTinh" class="form-select">
+                    <option value="" selected disabled>-- Chọn giới tính --</option>
+                    <option value="Nam">Nam</option>
+                    <option value="Nữ">Nữ</option>
+                    <option value="Khác">Khác</option>
+                </select>
+            </div>
+            <div class="mt-4">
+                <button type="button" id="btn_capnhat" class="btn btn-primary"><i class="bi bi-arrow-repeat"></i> Cập nhật</button>
+                <button type="button" id="btn_quaylai" class="btn btn-secondary "><i class="bi bi-arrow-left-circle"></i> Quay lại</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $("#btn_capnhat").click(function () {
+        var urlParams = new URLSearchParams(window.location.search);
+        var id = urlParams.get("id");
+        var form = $('#form-act')[0];
+        var formData = new FormData(form);
+        formData.append('id', id);
+
+        $.ajax({
+            type: "POST",
+            data: formData,
+            url: '/QLNV/Update',
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                alert(response);
+                console.log(response);
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
+    });
+
+    $("#btn_quaylai").click(function () {
+        window.location.href = '/QLNV/DSNV';
+    });
+
+
+    $(document).ready(function () {
+        var urlParams = new URLSearchParams(window.location.search);
+        var id = urlParams.get("id");
+        if (id !== null && id !== "") {
+            $("#txt_MNV_Check").val(id);
+            loadNV(id);
+        }
+    });
+
+    function loadNV(id) {
+        $.ajax({
+            url: "/QLNV/LayTTNV",
+            type: "POST",
+            data: { id: id },
+            success: function (response) {
+                var nv = JSON.parse(response);
+                $("#txt_MNV_Check").val(nv.ID_NV);
+                $("#txt_MNV").val(nv.ID_NV);
+                $("#txt_HoTen").val(nv.TenNV);
+                $("#txt_MatKhau").val(nv.PasswordHash);
+                $("#slc_GioiTinh").val(nv.GioiTinh);
+                $("#txt_Email").val(nv.Email);
+                $("#txt_SDT").val(nv.SDT);
+                $("#txt_Luong").val(nv.Luong);
+                $("#txt_VaiTro").val(nv.VaiTro);
+                $("#txt_NgaySinh").val(nv.NgaySinh.substring(0, 10));
+                $("#txt_ThoiGianTuyen").val(nv.ThoiGianTuyen.substring(0, 10));
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        })
+    }
+</script>
+
+
+

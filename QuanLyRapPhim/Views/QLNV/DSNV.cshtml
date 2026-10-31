@@ -1,0 +1,219 @@
+﻿
+@{
+    ViewBag.Title = "DSNV";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+
+<div class="container-fluid">
+    <h3 class="title-page">Danh sách nhân viên</h3>
+    <hr />
+    <div class="mb-3">
+        <a href="~/QLNV/ThemNV" class="btn btn-info btn-add-nv">
+            <i class="bi bi-plus-circle"></i> Thêm mới
+        </a>
+    </div>
+    <div class="mb-2">
+        <div class="search-wrapper">
+            <input type="text" id="txtSearch" placeholder="Tìm nhân viên..." class="form-control" />
+        </div>
+    </div>
+
+    <table id="tbl_show" class="table"></table>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Xác nhận xóa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                Bạn có chắc muốn xóa thông tin nhân viên này?
+            </div>
+
+            <div class="modal-footer">
+                <button id="btnHuy" class="btn btn-outline-danger mt-2" data-bs-dismiss="modal">Hủy</button>
+                <button id="btnXacNhanXoa" class="btn btn-danger mt-2">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    var url_domain = window.location.origin;
+    $.ajax({
+        type: "GET",
+        contentType: "application/json; charset=utf-8",
+        url: window.location.origin + '/QLNV/Lay_DSNV',
+        processData: false,
+        cache: false,
+        success: function (response) {
+            console.log(response);
+
+            var dsnv = JSON.parse(response);
+            var tbl_show = $("#tbl_show");
+            var html_str = "<thead><tr><th>MNV</th><th>Họ tên</th><th>Vai trò</th><th>Mật khẩu tài khoản</th><th>Ngày sinh</th><th>Số điện thoại </th><th>Giới tính</th><th>Thao tác</th></tr></thead><tbody>";
+
+            for (var i = 0; i < dsnv.length; i++) {
+                var nv = dsnv[i];
+                html_str += "<tr>";
+                html_str +=
+                    "<td>" + nv.ID_NV + "</td>"
+                    + "<td>" + nv.TenNV + "</td>"
+                    + "<td>" + nv.VaiTro + "</td>"
+                    + "<td>" + nv.PasswordHash + "</td>";
+
+                var ngaysinh_format = "";
+                if (nv.NgaySinh) {
+                    var ngaysinh = nv.NgaySinh;
+                    var ngaysinh_year = ngaysinh.substring(0, 4);
+                    var ngaysinh_month = ngaysinh.substring(5, 7);
+                    var ngaysinh_day = ngaysinh.substring(8, 10);
+                    ngaysinh_format = ngaysinh_day + "/" + ngaysinh_month + "/" + ngaysinh_year;
+                }
+
+                html_str += "<td>" + ngaysinh_format + "</td>";
+                html_str += "<td>" + nv.SDT + "</td>";
+                html_str += "<td>" + nv.GioiTinh + "</td>";
+                html_str += "<td><a href='" + url_domain + "/QLNV/ChinhSua?id=" + nv.ID_NV + "' class='btn btn-warning'><i class='bi bi-pencil-square'></i> Sửa</a> <button class='btn btn-danger btn_xoa' data-id='" + nv.ID_NV + "' data-ten='" + nv.TenNV + "'><i class='bi bi-trash'></i> Xóa</button></td></tr>";
+            }
+            html_str += "</tbody>";
+            tbl_show.html(html_str);
+        },
+        error: function (data) {
+            console.log(data);
+        }
+    });
+
+    var deleteId;
+
+    $(document).on("click", ".btn_xoa", function () {
+        deleteId = $(this).data("id");
+        $("#deleteModal").modal("show");
+    });
+
+    $("#btnXacNhanXoa").click(function () {
+        $.ajax({
+            url: "/QLNV/XoaNV_Ajax",
+            type: "POST",
+            data: { id: deleteId },
+            success: function (response) {
+                alert(response);
+                location.reload();
+            },
+            error: function (err) {
+                console.error(err);
+            }
+        });
+    });
+
+
+
+    $(document).on('keyup', '#txtSearch', function () {
+        var keyword = $(this).val().toLowerCase();
+
+        $("#tbl_show tbody tr").filter(function () {
+            var mnv = $(this).find("td:eq(0)").text().toLowerCase();
+            var hoten = $(this).find("td:eq(1)").text().toLowerCase();
+
+            $(this).toggle(mnv.indexOf(keyword) > -1 || hoten.indexOf(keyword) > -1);
+        });
+    });
+</script>
+
+
+
+<style>
+    #txtSearch {
+        width: 400px;
+        border-radius: 6px;
+        border: 1px solid #ced4da;
+        height: 38px;
+        font-size: 14px;
+        outline: none;
+    }
+
+        #txtSearch::placeholder {
+            color: #6c757d;
+        }
+
+    .title-page {
+        font-weight: 700;
+        color: #0d6efd;
+        margin-top: 20px;
+    }
+
+    .btn-add-nv {
+        float: right;
+        margin-bottom: 12px;
+        padding: 8px 15px;
+        border-radius: 6px;
+        font-weight: 600;
+    }
+
+    #tbl_show {
+        width: 100%;
+        border-collapse: collapse;
+        overflow: hidden;
+        border-radius: 10px;
+        background: #fff;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.09);
+    }
+
+        #tbl_show thead {
+            background-color: #0d6efd;
+            color: white;
+        }
+
+            #tbl_show thead th {
+                padding: 12px;
+                font-size: 15px;
+                font-weight: 600;
+                border: none;
+                white-space: nowrap;
+            }
+
+        #tbl_show tbody td {
+            padding: 11px 12px;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 14px;
+        }
+
+        #tbl_show tbody tr:hover {
+            background-color: #eef5ff;
+            transition: 0.2s;
+        }
+
+    .btn-edit {
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        background: #ffc107;
+        border: none;
+        color: #000;
+    }
+
+        .btn-edit:hover {
+            background: #e0a800;
+        }
+
+    .btn-del {
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        background: #dc3545;
+        border: none;
+        color: #fff;
+    }
+
+        .btn-del:hover {
+            background: #bb2d3b;
+        }
+</style>
