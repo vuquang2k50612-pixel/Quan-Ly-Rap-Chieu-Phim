@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -123,8 +123,12 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Business\NhanVienService.cs" />
     <Compile Include="Controllers\DangNhapNhanVienController.cs" />
+    <Compile Include="Controllers\DKKHController.cs" />
+    <Compile Include="Controllers\DNKHController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\QLNVController.cs" />
+    <Compile Include="Controllers\DSPController.cs" />
+    <Compile Include="Controllers\TrangChuKhachHangController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -158,6 +162,17 @@
     <Content Include="img\anhnenlayout.jpg" />
     <Content Include="img\Logo.jpg" />
     <Content Include="img\pexels-tima-miroshnichenko-7991375.jpg" />
+    <Content Include="img\anhnendangnhap2.jpg" />
+    <Content Include="img\Avatar Fire And Ash.jpg" />
+    <Content Include="img\Avengers Endgame.jpg" />
+    <Content Include="img\Dune Part Two.jpg" />
+    <Content Include="img\Dune2_bg.jpg" />
+    <Content Include="img\Inside Out 2 .jpg" />
+    <Content Include="img\insideout2_bg .jpg" />
+    <Content Include="img\The Batman 2.jpg" />
+    <Content Include="img\thebatman_bg.jpg" />
+    <Content Include="img\Zootopia 2.jpg" />
+    <Content Include="img\Ảnh Trống.png" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -202,6 +217,9 @@
     <Content Include="Views\QLNV\ThemNV.cshtml" />
     <Content Include="Views\QLNV\DSNV.cshtml" />
     <Content Include="Views\Shared\_Layout1.cshtml" />
+    <Content Include="Views\DKKH\DKKH.cshtml" />
+    <Content Include="Views\DNKH\DNKH.cshtml" />
+    <Content Include="Views\TrangChuKhachHang\TrangChuKhachHang.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
