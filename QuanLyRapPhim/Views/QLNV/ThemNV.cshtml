@@ -1,0 +1,105 @@
+﻿
+@{
+    ViewBag.Title = "ThemNV";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+
+<div class="container mt-4">
+    <h3 class="fw-bold text-primary mb-3">Thêm mới nhân viên</h3>
+    <hr />
+
+    <div class="bg-white p-4 rounded-3">
+        <form id="form-act">
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label fw-semibold">Mã nhân viên</label>
+                <input type="text" class="form-control" id="txt_MNV" name="txt_MNV" />
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label fw-semibold">Họ và tên</label>
+                <input type="text" class="form-control" id="txt_HoTen" name="txt_HoTen" />
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label fw-semibold">Mật khẩu tài khoản</label>
+                <input type="text" class="form-control" id="txt_MatKhau" name="txt_MatKhau" />
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="exampleInputEmail1" class="form-label fw-semibold">Ngày sinh</label>
+                    <input type="date" class="form-control" id="txt_NgaySinh" name="txt_NgaySinh" />
+                </div>
+                <div class="col-md-6">
+                    <label for="exampleInputEmail1" class="form-label fw-semibold">Thời gian tuyển</label>
+                    <input type="date" class="form-control" id="txt_ThoiGianTuyen" name="txt_ThoiGianTuyen" />
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label fw-semibold">Email</label>
+                <input type="email" class="form-control" id="txt_Email" name="txt_Email" />
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label fw-semibold">Số điện thoại</label>
+                <input type="text" class="form-control" id="txt_SDT" name="txt_SDT" />
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label fw-semibold">Vai trò</label>
+                <select id="txt_VaiTro" name="txt_VaiTro" class="form-select">
+                    <option value="" selected disabled>-- Chọn vai trò --</option>
+                    <option value="Quản lý">Quản lý</option>
+                    <option value="Nhân viên">Nhân viên</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label fw-semibold">Lương</label>
+                <input type="number" class="form-control" id="txt_Luong" name="txt_Luong" />
+            </div>
+            <div class="mb-4">
+                <label for="exampleInputEmail1" class="form-label fw-semibold">Giới tính</label>
+                <select id="slc_GioiTinh" name="slc_GioiTinh" class="form-select">
+                    <option value="" selected disabled>-- Chọn giới tính --</option>
+                    <option value="Nam">Nam</option>
+                    <option value="Nữ">Nữ</option>
+                    <option value="Khác">Khác</option>
+                </select>
+            </div>
+            <div class="mt-4">
+                <button type="button" id="btn_them" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Thêm mới</button>
+                <button type="button" id="btn_quaylai" class="btn btn-secondary"><i class="bi bi-arrow-left-circle"></i> Quay lại</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $("#btn_them").click(function () {
+        var form = $('#form-act')[0];
+        var formData = new FormData(form);
+        $.ajax({
+            type: "POST",
+            url: window.location.origin + '/QLNV/Insert',
+            data: formData,
+            processData: false,
+            contentType: false,
+            cache: false,
+            success: function (response) {
+                alert(response);
+                if (response.toLowerCase().includes("thành công")) {
+                    $('#form-act')[0].reset();
+                    window.location.href = '/QLNV/DSNV';
+                }
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
+    });
+
+    $("#btn_quaylai").click(function () {
+        window.location.href = '/QLNV/DSNV';
+    });
+
+</script>
+
+
+

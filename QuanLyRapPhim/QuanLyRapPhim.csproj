@@ -121,10 +121,12 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Business\NhanVienService.cs" />
     <Compile Include="Controllers\DangNhapNhanVienController.cs" />
     <Compile Include="Controllers\DKKHController.cs" />
     <Compile Include="Controllers\DNKHController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\QLNVController.cs" />
     <Compile Include="Controllers\DSPController.cs" />
     <Compile Include="Controllers\TrangChuKhachHangController.cs" />
     <Compile Include="Global.asax.cs">
@@ -211,6 +213,10 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\DangNhapNhanVien\DangNhapNhanVien.cshtml" />
+    <Content Include="Views\QLNV\ChinhSua.cshtml" />
+    <Content Include="Views\QLNV\ThemNV.cshtml" />
+    <Content Include="Views\QLNV\DSNV.cshtml" />
+    <Content Include="Views\Shared\_Layout1.cshtml" />
     <Content Include="Views\DKKH\DKKH.cshtml" />
     <Content Include="Views\DNKH\DNKH.cshtml" />
     <Content Include="Views\TrangChuKhachHang\TrangChuKhachHang.cshtml" />
