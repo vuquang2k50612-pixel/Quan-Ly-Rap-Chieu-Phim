@@ -1,0 +1,81 @@
+@{
+    ViewBag.Title = "Thêm Suất Chiếu";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <h3 class="fw-bold text-primary mb-4">Thêm Suất Chiếu Mới</h3>
+
+    <form id="formThemSC">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Chọn Phim</label>
+                <select name="ID_Phim" class="form-select" required>
+                    <option value="">-- Chọn phim --</option>
+                    <!-- JS sẽ đổ dữ liệu vào đây -->
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Chọn Phòng</label>
+                <select name="ID_Phong" class="form-select" required>
+                    <option value="">-- Chọn phòng --</option>
+                    <!-- JS sẽ đổ dữ liệu vào đây -->
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Giờ Chiếu</label>
+                <input type="datetime-local" name="GioChieu" class="form-control" required />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Giá Vé (VNĐ)</label>
+                <input type="number" name="Gia" class="form-control" min="0" step="1000" required />
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Thêm Suất Chiếu</button>
+            <a href="/SuatChieu/DSP_SC" class="btn btn-secondary">Quay lại</a>
+        </div>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(function () {
+        $.get('/SuatChieu/LayDuLieuCombo', function (res) {
+            var data = JSON.parse(res);
+            // truyền dữ liệu phim
+            var optPhim = '<option value="">-- Chọn phim --</option>';
+            data.phim.forEach(p => optPhim += `<option value="${p.ID_Phim}">${p.TenPhim}</option>`);
+            $('select[name="ID_Phim"]').html(optPhim);
+            // truyền dữ liệu phòng
+            var optPhong = '<option value="">-- Chọn phòng --</option>';
+            data.phong.forEach(r => optPhong += `<option value="${r.ID_Phong}">${r.TenPhong}</option>`);
+            $('select[name="ID_Phong"]').html(optPhong);
+        });
+
+        $('#formThemSC').submit(function (e) {
+            e.preventDefault();
+
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: '/SuatChieu/ThemSC',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (res) {
+                    alert(res);
+                    if (res.includes("thành công")) {
+                        $('#formThemSC')[0].reset();
+                        alert("Thêm thành công! Bạn có thể tiếp tục thêm suất mới.");
+                    }
+                },
+                error: function () {
+                    alert("Lỗi kết nối server!");
+                }
+            });
+        });
+    });
+</script>
