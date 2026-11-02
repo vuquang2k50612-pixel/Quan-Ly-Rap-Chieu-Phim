@@ -1,0 +1,537 @@
+@{
+    Layout = null;
+    ViewBag.Title = "Thanh toán vé xem phim - CINEMA K68";
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title</title>
+    <!-- Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" />
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
+    <style>
+        :root {
+            --primary-color: #0b57d0;
+            --primary-hover: #0842a0;
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --accent-gold: #f59e0b;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            padding: 24px 12px;
+        }
+
+        .checkout-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .page-header h2 {
+            font-weight: 800;
+            color: #111827;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-custom {
+            background: var(--card-bg);
+            border-radius: 14px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .card-header-custom {
+            background: linear-gradient(135deg, #1e3a8a, #0b57d0);
+            color: white;
+            font-weight: 700;
+            font-size: 1.05rem;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-body-custom {
+            padding: 22px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 10px 0;
+            border-bottom: 1px dashed #e5e7eb;
+            font-size: 0.95rem;
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .summary-value {
+            font-weight: 700;
+            color: #111827;
+            text-align: right;
+            max-width: 60%;
+        }
+
+        .seat-badge {
+            background: #eff6ff;
+            color: #1d4ed8;
+            border: 1px solid #bfdbfe;
+            padding: 4px 10px;
+            border-radius: 6px;
+            display: inline-block;
+            font-weight: 700;
+            margin: 2px;
+        }
+
+        .total-box {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 14px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .total-amount {
+            color: #dc2626;
+            font-size: 1.45rem;
+            font-weight: 800;
+        }
+
+        .qr-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 12px;
+            border: 1px dashed #cbd5e1;
+            margin-bottom: 18px;
+        }
+
+        .qr-image {
+            width: 250px;
+            height: 250px;
+            object-fit: contain;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e7eb;
+            transition: transform 0.2s;
+        }
+
+        .qr-image:hover {
+            transform: scale(1.02);
+        }
+
+        .bank-info-box {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 14px;
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+        }
+
+        .bank-info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .bank-info-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .copy-badge {
+            cursor: pointer;
+            color: var(--primary-color);
+            transition: opacity 0.2s;
+        }
+
+        .copy-badge:hover {
+            opacity: 0.7;
+        }
+
+        .btn-confirm {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            font-weight: 700;
+            font-size: 1.05rem;
+            padding: 14px 20px;
+            border-radius: 10px;
+            border: none;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-confirm:hover:not(:disabled) {
+            background: linear-gradient(135deg, #059669, #047857);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .btn-confirm:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
+        .btn-back {
+            background: #f1f5f9;
+            color: #475569;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            width: 100%;
+            margin-top: 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s;
+        }
+
+        .btn-back:hover {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .food-item-badge {
+            display: flex;
+            justify-content: space-between;
+            background: #f8fafc;
+            padding: 6px 10px;
+            border-radius: 6px;
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="checkout-container">
+    <div class="page-header">
+        <h2><i class="bi bi-shield-check text-primary"></i> Xác Nhận & Thanh Toán</h2>
+        <p class="text-muted">Vui lòng kiểm tra lại đơn hàng và quét mã QR chuyển khoản để hoàn tất đặt vé</p>
+    </div>
+
+    <div class="row g-4">
+        <!-- CỘT TRÁI: THÔNG TIN ĐƠN HÀNG -->
+        <div class="col-lg-7">
+            <div class="card-custom">
+                <div class="card-header-custom">
+                    <i class="bi bi-receipt-cutoff fs-5"></i>
+                    <span>Chi Tiết Đơn Hàng</span>
+                </div>
+                <div class="card-body-custom">
+                    <div class="summary-row">
+                        <span class="summary-label"><i class="bi bi-film"></i> Tên phim:</span>
+                        <span class="summary-value text-primary fs-6">@ViewBag.TenPhim</span>
+                    </div>
+
+                    <div class="summary-row">
+                        <span class="summary-label"><i class="bi bi-tag"></i> Thể loại:</span>
+                        <span class="summary-value">@(!string.IsNullOrEmpty(ViewBag.TheLoai) ? ViewBag.TheLoai : "Điện ảnh")</span>
+                    </div>
+
+                    <div class="summary-row">
+                        <span class="summary-label"><i class="bi bi-clock-history"></i> Thời lượng:</span>
+                        <span class="summary-value">@(ViewBag.ThoiLuong ?? 120) phút</span>
+                    </div>
+
+                    <div class="summary-row">
+                        <span class="summary-label"><i class="bi bi-calendar-check"></i> Giờ chiếu:</span>
+                        <span class="summary-value text-danger">@ViewBag.GioChieu</span>
+                    </div>
+
+                    <div class="summary-row">
+                        <span class="summary-label"><i class="bi bi-door-open"></i> Phòng chiếu:</span>
+                        <span class="summary-value">@ViewBag.TenPhong</span>
+                    </div>
+
+                    <div class="summary-row">
+                        <span class="summary-label"><i class="bi bi-grid-3x3"></i> Ghế đã chọn:</span>
+                        <div class="summary-value text-end" id="seatBadgesContainer">
+                            @{
+                                string gheChonRaw = ViewBag.GheChon as string ?? "";
+                                var seats = gheChonRaw.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
+                                foreach (var s in seats)
+                                {
+                                    <span class="seat-badge">@s.Trim()</span>
+                                }
+                            }
+                        </div>
+                    </div>
+
+                    <!-- DANH SÁCH ĐỒ ĂN ĐÃ CHỌN -->
+                    <div class="summary-row" style="flex-direction: column; align-items: stretch;">
+                        <span class="summary-label mb-2"><i class="bi bi-cup-straw"></i> Bắp nước / Combo:</span>
+                        <div id="foodListContainer" class="w-100">
+                            <!-- Sẽ render qua JavaScript từ ViewBag.DoAn -->
+                            <div class="text-muted small fst-italic">Đang tải danh sách đồ ăn...</div>
+                        </div>
+                    </div>
+
+                    <!-- TỔNG KẾT TIỀN -->
+                    <div class="total-box">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-muted">Tiền vé:</span>
+                            <span class="fw-bold">@String.Format("{0:N0}", ViewBag.TongVe) đ</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Tiền đồ ăn:</span>
+                            <span class="fw-bold">@String.Format("{0:N0}", ViewBag.TongDoAn) đ</span>
+                        </div>
+                        <hr class="my-2" />
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-bold fs-6">TỔNG THANH TOÁN:</span>
+                            <span class="total-amount">@String.Format("{0:N0}", ViewBag.TongThanhToan) đ</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CỘT PHẢI: QUÉT MÃ QR & NÚT XÁC NHẬN -->
+        <div class="col-lg-5">
+            <div class="card-custom">
+                <div class="card-header-custom" style="background: linear-gradient(135deg, #0f766e, #0d9488);">
+                    <i class="bi bi-qr-code-scan fs-5"></i>
+                    <span>Quét Mã Thanh Toán</span>
+                </div>
+                <div class="card-body-custom">
+                    <div class="qr-wrapper">
+                        <!-- Ưu tiên VietQR động, nếu lỗi thì fallback về ảnh tĩnh -->
+                        <img id="qrImage"
+                             src="@ViewBag.VietQR"
+                             onerror="this.onerror=null; this.src='@ViewBag.QRCode';"
+                             class="qr-image"
+                             alt="QR Code thanh toán" />
+                        <div class="mt-2 text-center text-muted small">
+                            <i class="bi bi-camera-fill me-1"></i> Quét mã qua App Ngân hàng hoặc Ví MoMo
+                        </div>
+                    </div>
+
+                    <!-- THÔNG TIN CHUYỂN KHOẢN -->
+                    <div class="bank-info-box">
+                        <div class="bank-info-row">
+                            <span class="text-muted">Ngân hàng:</span>
+                            <span class="fw-bold">MB Bank (Quân Đội)</span>
+                        </div>
+                        <div class="bank-info-row">
+                            <span class="text-muted">Số tài khoản:</span>
+                            <span>
+                                <strong id="stkText">0025168888</strong>
+                                <i class="bi bi-copy copy-badge ms-1" onclick="copyToClipboard('0025168888', 'Số tài khoản')" title="Sao chép"></i>
+                            </span>
+                        </div>
+                        <div class="bank-info-row">
+                            <span class="text-muted">Chủ tài khoản:</span>
+                            <span class="fw-bold">RAP CHIEU PHIM CINEMA K68</span>
+                        </div>
+                        <div class="bank-info-row">
+                            <span class="text-muted">Số tiền:</span>
+                            <span class="fw-bold text-danger">@String.Format("{0:N0}", ViewBag.TongThanhToan) đ</span>
+                        </div>
+                        <div class="bank-info-row">
+                            <span class="text-muted">Nội dung CK:</span>
+                            <span>
+                                <strong id="memoText">CINEMA SC@(ViewBag.IDSuatChieu) @ViewBag.GheChon</strong>
+                                <i class="bi bi-copy copy-badge ms-1" onclick="copyToClipboard($('#memoText').text().trim(), 'Nội dung CK')" title="Sao chép"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- NÚT HÀNH ĐỘNG -->
+                    <button type="button" class="btn-confirm" id="btnXacNhan">
+                        <span id="btnIcon"><i class="bi bi-check-circle-fill me-2"></i></span>
+                        <span id="btnText">XÁC NHẬN ĐÃ THANH TOÁN</span>
+                    </button>
+
+                    <a href="javascript:history.back()" class="btn-back">
+                        <i class="bi bi-arrow-left me-1"></i> Quay lại chọn combo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    // 1. Render danh sách đồ ăn từ JSON ViewBag.DoAn
+    var rawDoAn = '@Html.Raw(ViewBag.DoAn)';
+    var doAnList = [];
+
+    try {
+        if (rawDoAn && rawDoAn !== '[]') {
+            doAnList = JSON.parse(rawDoAn);
+        }
+    } catch (e) {
+        console.warn("Không parse được JSON DoAn:", e);
+        doAnList = [];
+    }
+
+    $(document).ready(function () {
+        var foodHtml = '';
+        if (doAnList && doAnList.length > 0) {
+            doAnList.forEach(function (item) {
+                var ten = item.tenDoAn || 'Combo đồ ăn';
+                var sl = item.soLuong || 1;
+                foodHtml += `
+                    <div class="food-item-badge">
+                        <span><i class="bi bi-dot text-primary"></i> ${ten}</span>
+                        <span class="fw-bold text-dark">x${sl}</span>
+                    </div>`;
+            });
+        } else {
+            foodHtml = '<div class="text-muted small fst-italic">Không chọn món ăn kèm</div>';
+        }
+        $('#foodListContainer').html(foodHtml);
+    });
+
+    // 2. Hàm copy thông tin chuyển khoản nhanh
+    function copyToClipboard(text, label) {
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text).then(function () {
+                showToast(`Đã sao chép ${label}!`);
+            });
+        } else {
+            var tempInput = document.createElement("input");
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+            showToast(`Đã sao chép ${label}!`);
+        }
+    }
+
+    function showToast(msg) {
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: msg,
+            showConfirmButton: false,
+            timer: 1800
+        });
+    }
+
+    // 3. Xử lý click Xác nhận thanh toán
+    $('#btnXacNhan').click(function () {
+        var $btn = $(this);
+
+        Swal.fire({
+            title: 'Xác nhận thanh toán?',
+            html: 'Bạn đã quét mã QR và chuyển khoản thành công số tiền <b>@String.Format("{0:N0}", ViewBag.TongThanhToan) đ</b> chưa?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#10b981',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: '<i class="bi bi-check2"></i> Đã thanh toán',
+            cancelButtonText: 'Chưa, tôi kiểm tra lại'
+        }).then((result) => {
+            if (!result.isConfirmed) return;
+
+            // Chặn click đúp & hiển thị loading
+            $btn.prop('disabled', true);
+            $('#btnIcon').html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>');
+            $('#btnText').text('Đang xử lý giao dịch...');
+
+            var payload = {
+                id: @ViewBag.IDSuatChieu,
+                gheChon: "@ViewBag.GheChon",
+                doAnList: doAnList,
+                tenDoAn: doAnList.map(function (x) { return x.tenDoAn + ' (x' + x.soLuong + ')'; }).join(", "),
+                soLuong: doAnList.reduce(function (t, x) { return t + (parseInt(x.soLuong) || 0); }, 0),
+                tongTien: "@ViewBag.TongThanhToan",
+                idTK: @ViewBag.ID_TK
+            };
+
+            $.ajax({
+                url: '/DatVe/XacNhanThanhToan',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(payload),
+                dataType: 'json',
+                success: function (res) {
+                    if (res && res.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thanh toán thành công!',
+                            text: res.message || 'Vé của bạn đã được xuất thành công.',
+                            confirmButtonColor: '#0b57d0',
+                            confirmButtonText: 'Xem vé của tôi',
+                            timer: 3000,
+                            timerProgressBar: true
+                        }).then(() => {
+                            // Điều hướng về trang lịch sử đặt vé hoặc trang chủ
+                            window.location.href = '/Profile/LichSuDatVe';
+                        });
+                    } else {
+                        // Khôi phục nút bấm khi lỗi
+                        $btn.prop('disabled', false);
+                        $('#btnIcon').html('<i class="bi bi-check-circle-fill me-2"></i>');
+                        $('#btnText').text('XÁC NHẬN ĐÃ THANH TOÁN');
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Thanh toán thất bại',
+                            text: res ? res.message : 'Có lỗi xảy ra, vui lòng thử lại!'
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    $btn.prop('disabled', false);
+                    $('#btnIcon').html('<i class="bi bi-check-circle-fill me-2"></i>');
+                    $('#btnText').text('XÁC NHẬN ĐÃ THANH TOÁN');
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi hệ thống',
+                        text: 'Không thể kết nối đến máy chủ: ' + error
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

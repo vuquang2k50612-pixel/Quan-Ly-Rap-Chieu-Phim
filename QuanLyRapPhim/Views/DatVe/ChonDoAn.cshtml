@@ -1,0 +1,368 @@
+﻿@{
+    ViewBag.Title = "Chọn Đồ Ăn";
+    Layout = null;
+}
+
+<h2 class="title-page"><i class="bi bi-cup-straw fs-3"></i>Combo Ưu Đãi</h2>
+<div class="wrapper">
+    <div class="left">
+        <table id="tbl_show" class="table"></table>
+    </div>
+    <div class="right">
+        <div class="anhphim"></div>
+        <div class="tongTien">
+            <p><i class="bi bi-film"></i>  Tên phim:   <span class="tenphim"></span></p>
+            <p><i class="bi bi-alarm"></i>  Giờ chiếu:   <span class="giochieu"></span></p>
+            <p><i class="bi bi-display"></i>  Phòng chiếu:   <span class="phongchieu"></span></p>
+            <p><i class="bi bi-easel2"></i>  Ghế chọn:   <span class="ghechon"></span></p>
+            <p><i class="bi bi-tag"></i>  Thể loại:   <span class="theloai"></span></p>
+            <p><i class="bi bi-clock"></i>  Thời lượng:   <span class="thoiluong"></span></p>
+            <hr class="line" />
+            <div class="Tien">
+                Tiền vé: <span class="money" id="TienVe">0 VNĐ</span>
+            </div>
+            <div class="Tien">
+                Tổng tiền đồ ăn: <span class="money" id="TongTien">0 VNĐ</span>
+            </div>
+            <div class="Tien tongThanhToan">
+                Tổng thanh toán: <span class="money" id="TongThanhToan">0 VNĐ</span>
+            </div>
+        </div>
+        <div class="btn_bam">
+            <button id="btnQuaylai" class="btnQuayLai">QUAY LẠI</button>
+            <button id="btnTiepTuc" class="btn-next">TIẾP TỤC</button>
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+
+    var dsDoAnTinhTien = [];
+
+    $(document).ready(function () {
+        loadDoAn();
+    })
+
+    function loadDoAn() {
+        $.ajax({
+            url: "/DatVe/DSDoAn",
+            type: "GET",
+            success: function (response) {
+                var ds = JSON.parse(response);
+                dsDoAnTinhTien = ds;
+                var tbl = $("#tbl_show");
+                var html = "<thead><tr><th>Ảnh đồ ăn</th><th>Tên Combo</th><th>Giá</th><th>Mô tả</th><th> Số lượng</th></tr></thead><tbody>";
+                ds.forEach(item => {
+                    var img = "/img/" + item.TenDoAn + ".jpg";
+                    html += `<tr>
+                                      <td> <img src="${img}" style="width:100px;height:100px;object-fit:contain;border-radius:50%;"> </td>
+                                      <td> ${item.TenDoAn} </td>
+                                      <td> ${Number(item.Gia).toLocaleString("vi-VN")} VNĐ</td>
+                                      <td>${item.MoTa} </td>
+                                      <td>
+                                      <button class="btn_Tru" data-id="${item.ID}" > - </button>
+                                      <input type="text" value="0" id="sl_${item.ID}" class="sl" readonly>
+                                      <button class="btn_Cong" data-id="${item.ID}" > + </button>
+                                      </td>
+                                 </tr>`
+                });
+                html += "</tbody>";
+                tbl.html(html);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+
+    }
+
+    $(document).ready(function () {
+        var urlParams = new URLSearchParams(window.location.search);
+        var gheChon = urlParams.get("ghe");
+        var id = urlParams.get("id");
+        $.ajax({
+            url: "/DatVe/LayChiTietPhim",
+            type: "GET",
+            data: { id: id },
+            success: function (response) {
+                var phim = JSON.parse(response);
+                var imgSrc = "/img/" + phim.TenPhim + ".jpg";
+                $(".anhphim").html(`<img src="${imgSrc}">`);
+                $(".tenphim").text(phim.TenPhim);
+                $(".giochieu").text(phim.GioChieu);
+                $(".phongchieu").text(phim.TenPhong);
+                $(".ghechon").text(gheChon);
+                $(".theloai").text(phim.TheLoai);
+                $(".thoiluong").text(phim.ThoiLuong + " phút");
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        })
+
+    })
+
+    $(document).on("click", ".btn_Tru", function () {
+        var id = $(this).data("id");
+        var sl_input = $("#sl_" + id);
+        var value = parseInt(sl_input.val());
+        if (value > 0) {
+            sl_input.val(value - 1);
+            tinhTongTienDoAn();
+            tinhTongThanhToan();
+        }
+    })
+
+    $(document).on("click", ".btn_Cong", function () {
+        var id = $(this).data("id");
+        var sl_input = $("#sl_" + id);
+        var value = parseInt(sl_input.val());
+        var sanpham = dsDoAnTinhTien.find(o => o.ID == id);
+        if (value < sanpham.SoLuong) {
+            sl_input.val(value + 1);
+            tinhTongTienDoAn();
+            tinhTongThanhToan();
+        }
+        else {
+            alert("Số lượng đồ ăn không đủ!");
+        }
+    })
+
+
+    $(document).ready(function () {
+        var urlParams = new URLSearchParams(window.location.search);
+        tongTienVe = Number(urlParams.get("tongVe"));
+        $("#TienVe").text(tongTienVe.toLocaleString("vi-VN") + " VNĐ");
+        loadDoAn();
+        tinhTongThanhToan();
+    });
+
+
+    function tinhTongTienDoAn() {
+        var Tong = 0;
+        dsDoAnTinhTien.forEach(item => {
+            var sl = parseInt($("#sl_" + item.ID).val());
+            Tong += sl * item.Gia
+        })
+        $("#TongTien").text(Tong.toLocaleString("vi-VN") + " " + "VNĐ");
+        return Tong;
+    }
+
+    function tinhTongThanhToan() {
+        var tienDoAn = 0;
+        dsDoAnTinhTien.forEach(item => {
+            var sl = parseInt($("#sl_" + item.ID).val());
+            tienDoAn += sl * item.Gia
+        })
+        var tongThanhToan = tienDoAn + tongTienVe;
+        $("#TongThanhToan").text(tongThanhToan.toLocaleString("vi-VN") + " " + "VNĐ");
+    }
+
+    $("#btnTiepTuc").click(function () {
+        var urlParams = new URLSearchParams(window.location.search);
+        var id = urlParams.get("id");
+        var ghe = urlParams.get("ghe");
+        var tongVe = urlParams.get("tongVe");
+        var idTK = '@Session["ID_TK"]';
+
+        var doAnChon = [];
+        dsDoAnTinhTien.forEach(item => {
+            var sl = parseInt($("#sl_" + item.ID).val()) || 0;
+            if (sl > 0) {
+                doAnChon.push({
+                    id: item.ID,
+                    soLuong: sl,
+                    tenDoAn: item.TenDoAn,
+                });
+            }
+        });
+
+        var tongDoAn = tinhTongTienDoAn();
+        var doAn = encodeURIComponent(JSON.stringify(doAnChon));
+        var url = `/DatVe/ThanhToan?id=${id}&ghe=${ghe}&tongVe=${tongVe}&doAn=${doAn}&tongDoAn=${tongDoAn}&idTK=${idTK}`;
+        window.location.href = url;
+    });
+
+    $("#btnQuaylai").click(function () {
+        window.history.back();
+    })
+
+</script>
+
+<style>
+    .title-page {
+        font-size: 30px;
+        font-weight: 800;
+        margin-bottom: 20px;
+        margin-top: 20px;
+        margin-left: 80px;
+        opacity: 0.8;
+    }
+
+    #tbl_show {
+        width: 100%;
+        border-collapse: collapse;
+        border-radius: 10px;
+        background: #fff;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.09);
+    }
+
+        #tbl_show thead {
+            background-color: #4da0ff;
+            color: white;
+        }
+
+            #tbl_show thead th {
+                padding: 12px;
+                font-size: 15px;
+                font-weight: 600;
+                border: none;
+                text-align: center;
+            }
+
+        #tbl_show tbody td {
+            padding: 11px 12px;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 16px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+    .btn-next, .btnQuaylai {
+        border: none;
+        background: #4da0ff;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 15px;
+        transition: 0.2s;
+        text-align: center;
+        width: 124px;
+        height: 37px;
+    }
+
+        .btn-next:hover, .btnQuayLai:hover {
+            opacity: 0.5;
+            cursor: pointer;
+        }
+
+    .btnQuaylai {
+        background: #6c757d;
+    }
+
+    .btn_bam {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 20px;
+        margin-top: 25px;
+
+    }
+
+    .Tien {
+        font-size: 17px;
+        font-weight: bold;
+        color: red;
+    }
+
+    .tongThanhToan {
+        font-size: 19px;
+    }
+
+    .money {
+        color: black;
+    }
+
+    .sl {
+        width: 30px;
+        background: none;
+        border: none;
+        text-align: center;
+    }
+
+    .btn_Cong, .btn_Tru {
+        width: 25px;
+        height: 25px;
+        border: none;
+        border-radius: 5px;
+    }
+
+    .btn_Cong {
+        background-color: #4da0ff;
+        color: white;
+    }
+
+    .btn_Tru {
+        background: #c9c9c9;
+        color: black;
+    }
+
+        .btn_Cong:hover, .btn_Tru:hover {
+            cursor: pointer;
+            opacity: 0.6;
+        }
+
+    .wrapper {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        width: 100%;
+        font-family: 'Times New Roman';
+    }
+
+    .left {
+        flex: 5;
+        margin-left: 80px;
+    }
+
+    .right {
+        flex: 1.5;
+        margin-right: 80px;
+        background: #f9f9f9;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        min-height: 300px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .tongTien {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-left: 15px;
+    }
+
+        .tongTien p {
+            font-size: 15px;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: bold;
+        }
+
+    .anhphim {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-bottom: 20px;
+        margin-top: 20px;
+    }
+
+        .anhphim img {
+            width: 180px;
+            height: 220px;
+            object-fit: contain;
+        }
+
+    .line {
+        border: 1px dashed #ccc;
+        margin: 8px 0px;
+        margin-right: 15px;
+    }
+</style>
