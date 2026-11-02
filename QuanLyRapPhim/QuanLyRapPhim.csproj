@@ -121,9 +121,11 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Business\DatVeService.cs" />
     <Compile Include="Business\NhanVienService.cs" />
     <Compile Include="Business\SuatChieuService.cs" />
     <Compile Include="Controllers\DangNhapNhanVienController.cs" />
+    <Compile Include="Controllers\DatVeController.cs" />
     <Compile Include="Controllers\DKKHController.cs" />
     <Compile Include="Controllers\DNKHController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -132,6 +134,8 @@
     <Compile Include="Controllers\SuatChieuController.cs" />
     <Compile Include="Controllers\ThongTinNhanVienController.cs" />
     <Compile Include="Controllers\TrangChuKhachHangController.cs" />
+    <Compile Include="ViewModels\DoAnItem.cs" />
+    <Compile Include="ViewModels\GheViewModel.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -176,6 +180,7 @@
     <Content Include="img\thebatman_bg.jpg" />
     <Content Include="img\Zootopia 2.jpg" />
     <Content Include="img\Ảnh Trống.png" />
+    <Content Include="img\qr-thanh-toan.jpg" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -228,6 +233,9 @@
     <Content Include="Views\SuatChieu\ThemSuatChieu.cshtml" />
     <Content Include="Views\SuatChieu\XemGhe.cshtml" />
     <Content Include="Views\ThongTinNhanVien\ThongTinNhanVien.cshtml" />
+    <Content Include="Views\DatVe\ChonGhe.cshtml" />
+    <Content Include="Views\DatVe\ChonDoAn.cshtml" />
+    <Content Include="Views\DatVe\ThanhToan.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
