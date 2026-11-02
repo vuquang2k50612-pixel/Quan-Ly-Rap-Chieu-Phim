@@ -1,0 +1,115 @@
+@{
+    ViewBag.Title = "Chỉnh sửa phim";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <h3 class="fw-bold text-primary mb-3">Chỉnh sửa thông tin phim</h3>
+    <hr />
+    <div class="bg-white p-4 rounded-3 shadow">
+        <form id="formSuaPhim">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Mã phim cần sửa</label>
+                    <div class="input-group">
+                        <input type="number" id="txt_ID_Check" class="form-control" placeholder="Nhập ID phim" />
+                        <button type="button" id="btn_TimKiem" class="btn btn-outline-primary">Tìm kiếm</button>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Mã phim</label>
+                    <input type="text" id="txt_ID_Phim" name="ID_Phim" class="form-control" readonly />
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Tên phim</label>
+                <input type="text" id="txt_TenPhim" name="TenPhim" class="form-control" />
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Thể loại</label>
+                    <input type="text" id="txt_TheLoai" name="TheLoai" class="form-control" />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Thời lượng (phút)</label>
+                    <input type="number" id="txt_ThoiLuong" name="ThoiLuong" class="form-control" min="1" />
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Ngày phát hành</label>
+                <input type="date" id="txt_NgayPhatHanh" name="NgayPhatHanh" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Mô tả</label>
+                <textarea id="txt_MoTa" name="MoTa" class="form-control" rows="4"></textarea>
+            </div>
+
+            <div class="mt-4">
+                <button type="button" id="btn_CapNhat" class="btn btn-primary btn-lg">Cập nhật</button>
+                <button type="button" id="btn_QuayLai" class="btn btn-secondary btn-lg">Quay lại</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // TÌM KIẾM PHIM
+    $("#btn_TimKiem").click(function () {
+        var id = $("#txt_ID_Check").val();
+        if (!id) {
+            alert("Vui lòng nhập ID phim!");
+            return;
+        }
+
+        $.post('/DSP/LayTTP', { id: id }, function (res) {
+            if (res.includes("error")) {
+                alert(JSON.parse(res).error);
+                return;
+            }
+
+            var phim = JSON.parse(res);
+            $("#txt_ID_Phim").val(phim.ID_Phim);
+            $("#txt_TenPhim").val(phim.TenPhim);
+            $("#txt_TheLoai").val(phim.TheLoai);
+            $("#txt_ThoiLuong").val(phim.ThoiLuong);
+            $("#txt_MoTa").val(phim.MoTa);
+            $("#txt_NgayPhatHanh").val(phim.NgayPhatHanh);
+
+
+        }).fail(function () {
+            alert("Lỗi kết nối server!");
+        });
+    });
+
+    // CẬP NHẬT PHIM
+    $("#btn_CapNhat").click(function () {
+        var formData = new FormData($("#formSuaPhim")[0]);
+
+        $.ajax({
+            url: '/DSP/SuaPhim',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (res) {
+                alert(res);
+                if (res.includes("thành công")) {
+                    alert("Sửa phim thành công!");
+                    $("#formSuaPhim")[0].reset();
+                    $("#txt_ID_Check").val("");
+                }
+            },
+            error: function () { alert("Lỗi server!"); }
+        });
+    });
+
+    $("#btn_QuayLai").click(function () {
+        window.location.href = "/DSP/DSP"; // trang danh sách phim
+    });
+
+</script>
