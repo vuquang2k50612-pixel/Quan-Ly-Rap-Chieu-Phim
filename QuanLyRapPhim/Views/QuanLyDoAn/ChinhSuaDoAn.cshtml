@@ -1,0 +1,99 @@
+
+@{
+    ViewBag.Title = "ChinhSuaDoAn";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+
+
+<div class="container mt-4">
+    <h3 class="fw-bold text-primary mb-3">Chỉnh sửa đồ ăn</h3>
+    <hr />
+
+    <div class="bg-white p-4 rounded-3">
+        <form id="form-act">
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label fw-semibold">Tên đồ ăn</label>
+                <input type="text" class="form-control" id="txt_TenDoAn" name="txt_TenDoAn" readonly/>
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label fw-semibold">Số lượng</label>
+                <input type="text" class="form-control" id="txt_SoLuong" name="txt_SoLuong" />
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label fw-semibold">Mô tả</label>
+                <input type="text" class="form-control" id="txt_MoTa" name="txt_MoTa" />
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label fw-semibold">Giá</label>
+                <input type="text" class="form-control" id="txt_Gia" name="txt_Gia" />
+            </div>
+            <div class="mt-4">
+                <button type="button" id="btn_CapNhat" class="btn btn-primary"><i class="bi bi-arrow-repeat"></i> Cập nhật</button>
+                <button type="button" id="btn_quaylai" class="btn btn-secondary"><i class="bi bi-arrow-left-circle"></i> Quay lại</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $("#btn_CapNhat").click(function () {
+        var urlParams = new URLSearchParams(window.location.search);
+        var id = urlParams.get("id");
+        var form = $('#form-act')[0];
+        var formData = new FormData(form);
+        formData.append('id', id);
+
+        $.ajax({
+            type: "POST",
+            data: formData,
+            url: '/QuanLyDoAn/UpdateDoAn',
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                alert(response);
+                console.log(response);
+                window.location.href = "/QuanLyDoAn/DSDoAn";
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
+    });
+
+    $("#btn_quaylai").click(function () {
+        window.location.href = "/QuanLyDoAn/DSDoAn";
+    });
+
+    $(document).ready(function () {
+        var urlParams = new URLSearchParams(window.location.search);
+        var id = urlParams.get("id");
+        if (id !== null && id !== "") {
+            $("#txt_ID_Check").val(id);
+            loadDoAn(id);
+        }
+    })
+
+    function loadDoAn(id) {
+        $.ajax({
+            url: "/QuanLyDoAn/LayTTDoAn",
+            type: "POST",
+            data: { id: id },
+            success: function (response) {
+                var doan = JSON.parse(response);
+                $("#txt_ID_Check").val(doan.ID);
+                $("#txt_TenDoAn").val(doan.TenDoAn);
+                $("#txt_SoLuong").val(doan.SoLuong);
+                $("#txt_MoTa").val(doan.MoTa);
+                $("#txt_Gia").val(doan.Gia);
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        })
+    }
+</script>
+
+
+
