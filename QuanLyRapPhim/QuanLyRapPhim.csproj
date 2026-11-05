@@ -129,6 +129,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\QLNVController.cs" />
     <Compile Include="Controllers\DSPController.cs" />
+    <Compile Include="Controllers\SCKHController.cs" />
     <Compile Include="Controllers\SuatChieuController.cs" />
     <Compile Include="Controllers\ThongTinNhanVienController.cs" />
     <Compile Include="Controllers\TrangChuKhachHangController.cs" />
@@ -228,6 +229,7 @@
     <Content Include="Views\SuatChieu\ThemSuatChieu.cshtml" />
     <Content Include="Views\SuatChieu\XemGhe.cshtml" />
     <Content Include="Views\ThongTinNhanVien\ThongTinNhanVien.cshtml" />
+    <Content Include="Views\SCKH\SCKH.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
