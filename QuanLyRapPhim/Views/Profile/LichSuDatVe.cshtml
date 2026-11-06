@@ -1,0 +1,204 @@
+﻿@{
+    ViewBag.Title = "Lịch sử đặt vé";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    // Lấy thông tin User
+    var user = Session["TaiKhoan"] as QuanLyRapPhim.Models.TaiKhoan; 
+}
+
+<style>
+    .history-page {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+        padding-bottom: 50px;
+    }
+
+    .history-card {
+        background-color: #fff;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        padding: 40px;
+        margin-top: 50px;
+        border-top: 5px solid #e74c3c;
+    }
+
+    .page-title {
+        color: #2c3e50;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 15px;
+    }
+
+    .welcome-text {
+        font-size: 16px;
+        color: #555;
+        margin-bottom: 30px;
+        font-style: italic;
+    }
+
+    .table-container {
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid #eee;
+    }
+
+    .custom-table {
+        margin-bottom: 0;
+        width: 100%;
+    }
+
+        .custom-table thead {
+            background: linear-gradient(45deg, #1a2a6c, #b21f1f);
+            color: white;
+        }
+
+            .custom-table thead th {
+                padding: 18px;
+                font-weight: 600;
+                text-align: center;
+                border: none;
+            }
+
+        .custom-table tbody td {
+            padding: 15px;
+            vertical-align: middle;
+            text-align: center;
+            border-bottom: 1px solid #f2f2f2;
+            color: #333;
+            font-size: 15px;
+        }
+
+        .custom-table tbody tr:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-2px);
+            transition: all 0.2s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+    .movie-name {
+        color: #2980b9;
+        font-weight: 700;
+        font-size: 16px;
+        text-align: left !important;
+    }
+
+    .seat-badge {
+        background-color: #34495e;
+        color: #fff;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .price-text {
+        color: #c0392b;
+        font-weight: 800;
+        font-size: 16px;
+    }
+
+    .status-label {
+        padding: 6px 15px;
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        display: inline-block;
+    }
+
+    .status-success {
+        background-color: #e8f5e9;
+        color: #2e7d32;
+        border: 1px solid #a5d6a7;
+    }
+
+    .status-pending {
+        background-color: #fff3e0;
+        color: #ef6c00;
+        border: 1px solid #ffe0b2;
+    }
+</style>
+
+<div class="history-page">
+    <div class="container">
+        <div class="history-card">
+            <h2 class="page-title"><i class="fa fa-history" aria-hidden="true"></i> Lịch sử đặt vé</h2>
+
+            <div class="welcome-text">
+                @if (user != null)
+                {
+                    <span>Xin chào, <strong style="color: #e74c3c; font-size: 18px;">@user.TenTK</strong>. Cảm ơn bạn đã đồng hành cùng rạp!</span>
+                }
+                else
+                {
+                    <span>Đang tải thông tin...</span>
+                }
+            </div>
+
+            <div class="table-container">
+                <table class="table custom-table">
+                    <thead>
+                        <tr>
+                            <th width="8%">Mã Vé</th>
+                            <th width="20%">Phim</th>
+                            <th width="15%">Suất Chiếu</th>
+                            <th width="15%">Phòng & Ghế</th>
+                            <th width="15%">Đồ Ăn</th>
+                            <th width="15%">Tổng Tiền</th>
+                            <th width="12%">Trạng Thái</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr><td colspan="7" class="text-center" style="padding: 30px; color: #777;">Đang tải dữ liệu...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '/Profile/LayLichSuDatVe',
+            type: 'GET',
+            success: function (res) {
+                if (res.success) {
+                    var html = '';
+                    if (res.data.length === 0) {
+                        $('#tableBody').html('<tr><td colspan="7" class="text-center" style="padding: 30px;">Bạn chưa có lịch sử đặt vé nào. <a href="/">Đặt vé ngay!</a></td></tr>');
+                        return;
+                    }
+
+                    $.each(res.data, function (i, item) {
+                        var statusClass = (item.TrangThai === 'Đã thanh toán' || item.TrangThai.toLowerCase().includes('đã'))
+                            ? 'status-success' : 'status-pending';
+
+                        html += '<tr>';
+                        html += '<td><strong>#' + item.MaVe + '</strong></td>';
+                        html += '<td class="movie-name">' + item.TenPhim + '</td>';
+                        html += '<td>' + item.NgayChieu + '</td>';
+                        html += '<td>' + item.TenPhong + '<br><span class="seat-badge">' + item.Ghe + '</span></td>';
+                        html += '<td>' + (item.DoAn ? item.DoAn : '<span style="color:#aaa">Không có</span>') + '</td>';
+
+                        var tien = new Intl.NumberFormat('vi-VN').format(item.TongTien) + ' đ';
+                        html += '<td class="price-text">' + tien + '</td>';
+                        html += '<td><span class="status-label ' + statusClass + '">' + item.TrangThai + '</span></td>';
+                        html += '</tr>';
+                    });
+                    $('#tableBody').html(html);
+                } else {
+                    alert(res.message);
+                }
+            },
+            error: function () {
+                $('#tableBody').html('<tr><td colspan="7" class="text-center text-danger" style="padding: 20px;">Không thể kết nối đến máy chủ!</td></tr>');
+            }
+        });
+    });
+</script>

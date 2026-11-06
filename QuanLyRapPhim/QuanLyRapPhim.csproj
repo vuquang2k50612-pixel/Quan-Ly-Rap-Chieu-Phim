@@ -129,6 +129,7 @@
     <Compile Include="Controllers\DKKHController.cs" />
     <Compile Include="Controllers\DNKHController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Controllers\QLNVController.cs" />
     <Compile Include="Controllers\DSPController.cs" />
     <Compile Include="Controllers\SCKHController.cs" />
@@ -238,6 +239,7 @@
     <Content Include="Views\DatVe\ChonDoAn.cshtml" />
     <Content Include="Views\DatVe\ThanhToan.cshtml" />
     <Content Include="Views\SCKH\SCKH.cshtml" />
+    <Content Include="Views\Profile\LichSuDatVe.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
