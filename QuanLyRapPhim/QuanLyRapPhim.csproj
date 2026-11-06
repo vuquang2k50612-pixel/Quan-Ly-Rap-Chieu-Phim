@@ -130,6 +130,7 @@
     <Compile Include="Controllers\QLNVController.cs" />
     <Compile Include="Controllers\DSPController.cs" />
     <Compile Include="Controllers\SuatChieuController.cs" />
+    <Compile Include="Controllers\ThongTinNhanVienController.cs" />
     <Compile Include="Controllers\TrangChuKhachHangController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -226,6 +227,7 @@
     <Content Include="Views\SuatChieu\ChiTietSuatChieu.cshtml" />
     <Content Include="Views\SuatChieu\ThemSuatChieu.cshtml" />
     <Content Include="Views\SuatChieu\XemGhe.cshtml" />
+    <Content Include="Views\ThongTinNhanVien\ThongTinNhanVien.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
