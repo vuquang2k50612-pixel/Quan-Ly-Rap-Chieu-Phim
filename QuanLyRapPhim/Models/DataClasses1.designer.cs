@@ -54,9 +54,13 @@ namespace QuanLyRapPhim.Models
     partial void InsertVe(Ve instance);
     partial void UpdateVe(Ve instance);
     partial void DeleteVe(Ve instance);
-    #endregion
-		
-		public DataClasses1DataContext(string connection) : 
+        #endregion
+        public DataClasses1DataContext() :
+    base(System.Configuration.ConfigurationManager.ConnectionStrings["PhimConnectionString"].ConnectionString)
+        {
+            OnCreated();
+        }
+        public DataClasses1DataContext(string connection) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
