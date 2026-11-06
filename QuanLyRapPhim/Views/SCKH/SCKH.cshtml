@@ -1,0 +1,210 @@
+﻿@{
+    ViewBag.Title = "SCKH";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
+
+<div class="container mt-4">
+    <h2 class="text-center text-white mb-5 display-4 fw-bold">PHIM ĐANG CHIẾU</h2>
+
+    <!-- Danh sách phim -->
+    <div class="row" id="danhSachPhim"></div>
+
+    <!-- Chi tiết phim và suất chiếu -->
+    <div id="chiTietVaSuat" class="mt-5" style="display:none;">
+        <div class="text-center mb-4">
+            <button id="btnQuayLai" class="btn btn-outline-light btn-lg mb-3">
+                Quay lại danh sách phim
+            </button>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-4 text-center">
+                <img id="anhPhimLon" src="" class="img-fluid rounded-3 shadow-lg"
+                     style="max-height:550px; object-fit:cover;">
+                <h3 id="tenPhimLon" class="text-white mt-3 fw-bold fs-1"></h3>
+            </div>
+
+            <div class="col-lg-8">
+                <h3 class="text-white text-center mb-4 fw-bold">CHỌN SUẤT CHIẾU</h3>
+                <div id="dsSuatChieu" class="row"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(function () {
+
+        // 1. Lấy danh sách phim
+        $.get('/DSP/LayDSP', function (res) {
+            var list = JSON.parse(res);
+            var html = '';
+            $.each(list, function (i, p) {
+                var imgSrc = '/img/' + p.TenPhim + '.jpg';
+                html += `
+                <div class="col-md-3 mb-4">
+                    <div class="movie-card text-center" data-id="${p.ID_Phim}"
+                         data-ten="${p.TenPhim}" data-img="${imgSrc}">
+                        <img src="${imgSrc}" class="movie-img" alt="${p.TenPhim}">
+                        <div class="movie-title mt-2">${p.TenPhim}</div>
+                    </div>
+                </div>`;
+            });
+            $('#danhSachPhim').html(html);
+        });
+
+        // 2. Khi click vào phim
+        $(document).on('click', '.movie-card', function () {
+            var card = $(this);
+            var id = card.data('id');
+            var ten = card.data('ten');
+            var img = card.data('img');
+
+            // Hiển thị chi tiết phim
+            $('#anhPhimLon').attr('src', img);
+            $('#tenPhimLon').text(ten);
+            $('#danhSachPhim').hide();
+            $('#chiTietVaSuat').fadeIn(600);
+
+            // Lấy suất chiếu
+            $.ajax({
+                url: '/SCKH/LaySuatCuaPhim',
+                type: 'POST',
+                data: { idPhim: id },
+                dataType: 'json',
+                success: function (response) {
+                    var html = '';
+                    if (!response.success || response.data.length === 0) {
+                        html = '<div class="col-12 text-center"><h4 class="text-white">Chưa có suất chiếu nào</h4></div>';
+                    } else {
+                        $.each(response.data, function (i, sc) {
+
+                            var dateObj = new Date(parseInt(sc.GioChieu.replace("/Date(", "").replace(")/", "")));
+
+                            // Ngày và giờ theo Việt Nam
+                            var ngay = dateObj.toLocaleDateString('vi-VN', {
+                                weekday: 'long',
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric'
+                            });
+                            var gio = dateObj.toLocaleTimeString('vi-VN', {
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            });
+
+                            html += `
+    <div class="col-md-4 mb-3">
+        <div class="card bg-dark text-white border-warning h-100 text-center">
+            <div class="card-body">
+                <h5 class="text-warning">${gio}</h5>
+                <p class="fs-5">Ngày: ${ngay}</p>
+                <p class="fs-5">Phòng ${sc.ID_Phong}</p>
+                <p class="text-success fw-bold fs-4">${sc.Gia.toLocaleString('vi-VN')} ₫</p>
+                <button type="button" class="btn btn-danger btn-lg w-100 chon-ghe-btn"
+                        data-id="${sc.ID_SuatChieu || ''}">
+                    CHỌN GHẾ NGAY
+                </button>
+            </div>
+        </div>
+    </div>`;
+                        });
+                    }
+                    $('#dsSuatChieu').html(html);
+                },
+                error: function (err) {
+                    console.error(err);
+                }
+            });
+        });
+
+        // 3. Nút quay lại
+        $('#btnQuayLai').click(function () {
+            $('#chiTietVaSuat').hide();
+            $('#danhSachPhim').fadeIn(600);
+            $('#dsSuatChieu').html('');
+        });
+
+        // Bắt sự kiện bấm nút chọn ghế – AN TOÀN 100%
+        $(document).on('click', '.chon-ghe-btn', function () {
+            var id = $(this).data('id');
+
+            if (!id || id === '' || id === 'null' || id === 'undefined') {
+                alert("Lỗi: Không lấy được ID suất chiếu! Vui lòng thử lại.");
+                console.error("ID suất chiếu bị null:", $(this).data());
+                return;
+            }
+
+            // Chuyển hướng đúng 100%
+            window.location.href = '/DatVe/ChonGhe/' + id;
+        });
+    });
+</script>
+
+<style>
+    body {
+        min-height: 100vh;
+    }
+
+    .movie-card {
+        background: white;
+        border-radius: 20px;
+        padding: 15px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        cursor: pointer;
+        transition: 0.4s;
+    }
+
+        .movie-card:hover {
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 0 20px 40px rgba(255,0,0,0.4);
+        }
+
+    .movie-img {
+        width: 100%;
+        height: 420px;
+        object-fit: cover;
+        border-radius: 15px;
+    }
+
+    .movie-title {
+        font-weight: 700;
+        font-size: 1.3rem;
+        color: #333;
+        margin-top: 10px;
+    }
+
+    /* Container suất chiếu */
+    #dsSuatChieu .card {
+        border-radius: 15px;
+        transition: transform 0.3s, box-shadow 0.3s;
+        cursor: pointer;
+    }
+
+        #dsSuatChieu .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.7);
+        }
+
+    #dsSuatChieu .card-body h5 {
+        font-size: 1.2rem;
+        color: #ffc107;
+        margin-bottom: 10px;
+    }
+
+    #dsSuatChieu .card-body p {
+        font-size: 1rem;
+        margin-bottom: 5px;
+    }
+
+    #dsSuatChieu .card-body .btn {
+        font-weight: bold;
+        padding: 10px 15px;
+        font-size: 1.1rem;
+        margin-top: 10px;
+    }
+</style>

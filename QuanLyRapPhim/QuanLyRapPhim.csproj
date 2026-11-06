@@ -131,6 +131,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\QLNVController.cs" />
     <Compile Include="Controllers\DSPController.cs" />
+    <Compile Include="Controllers\SCKHController.cs" />
     <Compile Include="Controllers\SuatChieuController.cs" />
     <Compile Include="Controllers\ThongTinNhanVienController.cs" />
     <Compile Include="Controllers\TrangChuKhachHangController.cs" />
@@ -236,6 +237,7 @@
     <Content Include="Views\DatVe\ChonGhe.cshtml" />
     <Content Include="Views\DatVe\ChonDoAn.cshtml" />
     <Content Include="Views\DatVe\ThanhToan.cshtml" />
+    <Content Include="Views\SCKH\SCKH.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
