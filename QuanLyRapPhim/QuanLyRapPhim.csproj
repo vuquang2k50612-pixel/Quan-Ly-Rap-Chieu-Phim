@@ -122,12 +122,14 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Business\NhanVienService.cs" />
+    <Compile Include="Business\SuatChieuService.cs" />
     <Compile Include="Controllers\DangNhapNhanVienController.cs" />
     <Compile Include="Controllers\DKKHController.cs" />
     <Compile Include="Controllers\DNKHController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\QLNVController.cs" />
     <Compile Include="Controllers\DSPController.cs" />
+    <Compile Include="Controllers\SuatChieuController.cs" />
     <Compile Include="Controllers\TrangChuKhachHangController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -220,6 +222,10 @@
     <Content Include="Views\DKKH\DKKH.cshtml" />
     <Content Include="Views\DNKH\DNKH.cshtml" />
     <Content Include="Views\TrangChuKhachHang\TrangChuKhachHang.cshtml" />
+    <Content Include="Views\SuatChieu\DSP_SC.cshtml" />
+    <Content Include="Views\SuatChieu\ChiTietSuatChieu.cshtml" />
+    <Content Include="Views\SuatChieu\ThemSuatChieu.cshtml" />
+    <Content Include="Views\SuatChieu\XemGhe.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
