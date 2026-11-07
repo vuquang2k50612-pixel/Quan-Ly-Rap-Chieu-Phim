@@ -1,0 +1,49 @@
+﻿
+@model QuanLyRapPhim.Models.QLDanh_Sach_Phim
+@{
+    ViewBag.Title = "Chi Tiết Phim";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+
+<h2>@Model.TenPhim</h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <img src="/img/@(Model.TenPhim + ".jpg")" alt="@Model.TenPhim" class="img-fluid" onerror="this.src='/img/Ảnh Trống.jpg'">
+    </div>
+    <div class="col-md-8">
+        <p><strong>Thể loại:</strong> @Model.TheLoai</p>
+        <p><strong>Thời lượng:</strong> @Model.ThoiLuong phút</p>
+        <p><strong>Ngày phát hành:</strong> @Model.NgayPhatHanh</p>
+        <p><strong>Mô tả:</strong> @Model.MoTa</p>
+        <a href="/DSP/DSP" class="btn btn-secondary">Quay lại</a>
+        <button id="btnSuaPhim" class="btn btn-success">Sửa</button>
+        <button id="btnXoaPhim" class="btn btn-danger">Xoá</button>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $("#btnSuaPhim").click(function () {
+        window.location.href = '/DSP/SuaDSP';
+    });
+
+    $("#btnXoaPhim").click(function () {
+        if (confirm("Bạn có chắc muốn xoá phim này không?")) {
+            $.ajax({
+                url: '/DSP/XoaPhim',
+                type: 'POST',
+                data: { TenPhim: "@Model.TenPhim" },
+                success: function (res) {
+                    alert(res);
+                    if (res.includes("thành công")) {
+                        window.location.href = '/DSP/DSP';
+                    }
+                },
+                error: function () {
+                    alert("Lỗi khi xoá phim!");
+                }
+            });
+        }
+    });
+</script>

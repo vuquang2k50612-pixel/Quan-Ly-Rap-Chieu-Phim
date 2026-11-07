@@ -1,0 +1,64 @@
+@{
+    ViewBag.Title = "Thêm Phim";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+
+<h2>Thêm Phim Mới</h2>
+
+<form id="formThemPhim" enctype="multipart/form-data">
+    <label>Tên phim:</label><br />
+    <input type="text" id="TenPhim" name="TenPhim" required /><br /><br />
+
+    <label>Thể loại:</label><br />
+    <input type="text" id="TheLoai" name="TheLoai" required /><br /><br />
+
+    <label>Thời lượng (phút):</label><br />
+    <input type="number" id="ThoiLuong" name="ThoiLuong" /><br /><br />
+
+    <label>Mô tả:</label><br />
+    <input type="text" id="MoTa" name="MoTa" /><br /><br />
+
+    <label>Ngày phát hành:</label><br />
+    <input type="date" id="NgayPhatHanh" name="NgayPhatHanh" /><br /><br />
+
+    <label>Ảnh phim:</label><br />
+    <input type="file" id="AnhPhim" name="AnhPhim" accept="image/*" /><br /><br />
+
+    <label for="TrailerID">ID YouTube Trailer:</label>
+    <input type="text" id="TrailerID" name="TrailerID" /><br /><br />
+
+    <button type="submit" class="btn btn-primary">Lưu</button>
+    <button type="button" id="btnQuayLai" class="btn btn-secondary">Quay lại</button>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>$(document).ready(function () {
+        $("#formThemPhim").submit(function (e) {
+            e.preventDefault();
+            var form = $('#formThemPhim')[0];
+            var formData = new FormData(form);
+
+            $.ajax({
+                type: "POST",
+                url: "/DSP/ThemPhim",
+                data: formData,
+                processData: false,
+                contentType: false,
+                cache: false,
+                success: function (response) {
+                    alert(response);
+                    
+                        window.location.href = "/DSP/DSP";
+                    
+                },
+                error: function (data) {
+                    alert("Lỗi khi thêm phim!");
+                    console.log(data);
+                }
+            });
+        });
+
+        $("#btnQuayLai").click(function () {
+            window.location.href = "/DSP/DSP";
+        });
+    });</script>
