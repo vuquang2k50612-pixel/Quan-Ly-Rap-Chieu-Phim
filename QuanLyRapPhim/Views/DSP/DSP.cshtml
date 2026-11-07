@@ -1,0 +1,112 @@
+@{
+    ViewBag.Title = "Danh Sách Phim";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>🎬 Danh Sách Phim</h2>
+        <button id="btnThemPhim" class="btn btn-success">+ Thêm Phim</button>
+    </div>
+
+    <div class="row" id="danhSachPhim"></div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+        $(document).ready(function () {
+            // Chuyển hướng sang trang thêm phim
+            $("#btnThemPhim").click(function () {
+                window.location.href = '/DSP/ThemDSP';
+            });
+
+            // Load danh sách phim qua AJAX
+            $.ajax({
+                url: '/DSP/LayDSP',
+                type: 'GET',
+                success: function (data) {
+                    try {
+                        var list = JSON.parse(data);
+                        var html = '';
+
+                        $.each(list, function (i, item) {
+                            var imgSrc = '/img/' + item.TenPhim + '.jpg';
+                            html += `
+                                <div class="col-md-3 mb-4">
+                                    <div class="movie-card" onclick="xemChiTiet('${item.ID_Phim}')">
+                                        <img src="${imgSrc}" class="movie-img" alt="${item.TenPhim}" onerror="this.src='/img/Ảnh Trống.jpg'">
+                                        <div class="movie-title">${item.TenPhim}</div>
+                                    </div>
+                                </div>
+                            `;
+                        });
+
+                        $('#danhSachPhim').html(html);
+                    } catch (err) {
+                        $('#danhSachPhim').html('<p class="text-danger text-center">Lỗi parse JSON</p>');
+                    }
+                },
+                error: function () {
+                    $('#danhSachPhim').html('<p class="text-danger text-center">Lỗi khi tải danh sách phim</p>');
+                }
+            });
+        });
+
+        // Khi bấm vào 1 phim -> xem chi tiết
+        function xemChiTiet(id) {
+            window.location.href = '/DSP/ChiTiet/' + id;
+        }
+</script>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    h2 {
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .movie-card {
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        background-color: #fff;
+        padding: 15px;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+        .movie-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+        }
+
+    .movie-img {
+        width: 100%;
+        height: 350px;
+        object-fit: cover;
+        border-radius: 12px;
+        margin-bottom: 10px;
+    }
+
+    .movie-title {
+        font-weight: 600;
+        font-size: 18px;
+        color: #212529;
+    }
+
+    .btn-success {
+        border-radius: 8px;
+        padding: 8px 14px;
+    }
+
+    .container {
+        max-width: 1200px;
+    }
+</style>
