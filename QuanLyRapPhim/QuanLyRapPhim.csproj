@@ -122,6 +122,7 @@
     <Compile Include="Business\NhanVienService.cs" />
     <Compile Include="Business\SuatChieuService.cs" />
     <Compile Include="Controllers\DangNhapNhanVienController.cs" />
+    <Compile Include="Controllers\DatVeController.cs" />
     <Compile Include="Controllers\DKKHController.cs" />
     <Compile Include="Controllers\DNKHController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -234,6 +235,7 @@
     <Content Include="Views\DSP\ThemDSP.cshtml" />
     <Content Include="Views\DSP\SuaDSP.cshtml" />
     <Content Include="Views\DSP\ChiTiet.cshtml" />
+    <Content Include="Views\DatVe\ChonGhe.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
