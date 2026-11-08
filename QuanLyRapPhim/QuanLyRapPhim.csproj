@@ -122,6 +122,8 @@
     <Compile Include="Business\NhanVienService.cs" />
     <Compile Include="Business\DoAnService.cs" />
     <Compile Include="Business\SuatChieuService.cs" />
+    <Compile Include="Business\DatVeService.cs" />
+    <Compile Include="ViewModels\DoAnItem.cs" />
     <Compile Include="Controllers\DangNhapNhanVienController.cs" />
     <Compile Include="Controllers\DatVeController.cs" />
     <Compile Include="Controllers\DKKHController.cs" />
@@ -179,6 +181,7 @@
     <Content Include="img\thebatman_bg.jpg" />
     <Content Include="img\Zootopia 2.jpg" />
     <Content Include="img\Ảnh Trống.png" />
+    <Content Include="img\qr-thanh-toan.jpg" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -239,6 +242,7 @@
     <Content Include="Views\DSP\ChiTiet.cshtml" />
     <Content Include="Views\DatVe\ChonGhe.cshtml" />
     <Content Include="Views\DatVe\ChonDoAn.cshtml" />
+    <Content Include="Views\DatVe\ThanhToan.cshtml" />
     <Content Include="Views\QuanLyDoAn\ThemDoAn.cshtml" />
     <Content Include="Views\QuanLyDoAn\ChinhSuaDoAn.cshtml" />
     <Content Include="Views\QuanLyDoAn\DSDoAn.cshtml" />
