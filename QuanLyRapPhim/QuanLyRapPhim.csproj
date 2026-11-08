@@ -236,6 +236,7 @@
     <Content Include="Views\DSP\SuaDSP.cshtml" />
     <Content Include="Views\DSP\ChiTiet.cshtml" />
     <Content Include="Views\DatVe\ChonGhe.cshtml" />
+    <Content Include="Views\DatVe\ChonDoAn.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
