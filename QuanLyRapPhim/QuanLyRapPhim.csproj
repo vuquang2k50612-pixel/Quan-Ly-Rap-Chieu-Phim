@@ -120,6 +120,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Business\NhanVienService.cs" />
+    <Compile Include="Business\DoAnService.cs" />
     <Compile Include="Business\SuatChieuService.cs" />
     <Compile Include="Controllers\DangNhapNhanVienController.cs" />
     <Compile Include="Controllers\DatVeController.cs" />
@@ -129,6 +130,7 @@
     <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Controllers\QLNVController.cs" />
     <Compile Include="Controllers\DSPController.cs" />
+    <Compile Include="Controllers\QuanLyDoAnController.cs" />
     <Compile Include="Controllers\SCKHController.cs" />
     <Compile Include="Controllers\SuatChieuController.cs" />
     <Compile Include="Controllers\ThongTinNhanVienController.cs" />
@@ -237,6 +239,9 @@
     <Content Include="Views\DSP\ChiTiet.cshtml" />
     <Content Include="Views\DatVe\ChonGhe.cshtml" />
     <Content Include="Views\DatVe\ChonDoAn.cshtml" />
+    <Content Include="Views\QuanLyDoAn\ThemDoAn.cshtml" />
+    <Content Include="Views\QuanLyDoAn\ChinhSuaDoAn.cshtml" />
+    <Content Include="Views\QuanLyDoAn\DSDoAn.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
